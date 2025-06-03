@@ -81,7 +81,7 @@ class SolarSystemGenerator:
         """Genera planetas, lunas y cinturones de asteroides organizados por estrella"""
         total_planetas = random.randint(1, 16)
         total_lunas = random.randint(1, 27)
-        asteroides = random.randint(0, 2)
+        asteroides = random.randint(0, 3)
         
         # Distribuir planetas entre las estrellas
         cuerpos_por_estrella = {}

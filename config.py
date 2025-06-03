@@ -8,21 +8,21 @@ SYSTEM_PROBABILITIES = [50, 25, 25]  # Unario, Binario, Trinario
 # Probabilidades de tipos de estrellas (valores relativos)
 # Valores más altos = mayor probabilidad
 STAR_PROBABILITIES = {
-    # Estrellas más comunes
-    'Estrella Clase M': 3500,   # La más común
-    'Tipo K': 2000,             # Común y habitable
-    'Tipo G': 2000,             # Como nuestro Sol
-    'Tipo F': 1500,             # Habitable pero menos común
+    # Estrellas más comunes - No habitables
+    'Estrella Clase M': 4000,   # La más común
+    'Tipo T': 1500,             # Enana marrón
     
-    # Estrellas menos comunes
-    'Tipo A': 500,              # Menos común
-    'Tipo T': 300,              # Enana marrón
+    # Estrellas habitables - Menos comunes
+    'Tipo K': 800,              # Habitable pero menos común
+    'Tipo G': 700,              # Como nuestro Sol
+    'Tipo F': 600,              # Habitable pero menos común
+    'Tipo A': 400,              # Habitable pero rara
     
     # Estrellas raras
-    'Gigante Roja': 100,        # Peligrosa
-    'Pulsar': 70,               # Muy peligrosa
-    'Agujero Negro': 20,        # Extremadamente peligrosa
-    'Magnetar': 5,              # Muy rara y peligrosa
+    'Gigante Roja': 150,        # Peligrosa
+    'Pulsar': 100,              # Muy peligrosa
+    'Agujero Negro': 30,        # Extremadamente peligrosa
+    'Magnetar': 10,             # Muy rara y peligrosa
     
     # Estrellas extremadamente raras
     'Estrella Extraña': 3,      # Hipotética
@@ -54,10 +54,10 @@ NO_BODIES_STARS = [
 ]
 
 # Probabilidades para eventos especiales
-EVENTO_ESPECIAL_PROBABILITY = 30  # 30% de chance de evento especial
+EVENTO_ESPECIAL_PROBABILITY = 15  # 15% de chance de evento especial
 
 # Probabilidades de recursos estratégicos
-DEPOSITOS_PROBABILITY = 50  # 50% de chance de tener depósitos
+DEPOSITOS_PROBABILITY = 25  # 25% de chance de tener depósitos
 
 RECURSOS_ESTRATEGICOS = {
     # Recursos más comunes
@@ -87,7 +87,7 @@ PLANETAS_HABITABLES_RANGE = (1, 3)
 # Rangos para generación de cuerpos celestes
 PLANETS_RANGE = (1, 16)
 MOONS_RANGE = (1, 27)
-ASTEROID_BELTS_RANGE = (0, 2)
+ASTEROID_BELTS_RANGE = (0, 3)
 
 # Configuración de logging
 LOG_LEVEL = 'INFO'

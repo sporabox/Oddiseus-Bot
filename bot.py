@@ -211,7 +211,7 @@ async def ayuda_sistema_slash(interaction: discord.Interaction):
     
     embed.add_field(
         name="🪐 Cuerpos Celestes",
-        value="• **Planetas**: 1-16 por sistema\n• **Lunas**: 1-27 por sistema\n• **Asteroides**: 0-2 cinturones\n• *No se generan en sistemas con Agujero Negro o Estrella Extraña*",
+        value="• **Planetas**: 1-16 por sistema\n• **Lunas**: 1-27 por sistema\n• **Asteroides**: 0-3 cinturones\n• *No se generan en sistemas con Agujero Negro o Estrella Extraña*",
         inline=False
     )
     
@@ -273,7 +273,7 @@ async def ayuda_comando(ctx):
     
     embed.add_field(
         name="🪐 Cuerpos Celestes",
-        value="• **Planetas**: 1-16 por sistema\n• **Lunas**: 1-27 por sistema\n• **Asteroides**: 0-2 cinturones\n• *No se generan en sistemas con Agujero Negro o Estrella Extraña*",
+        value="• **Planetas**: 1-16 por sistema\n• **Lunas**: 1-27 por sistema\n• **Asteroides**: 0-3 cinturones\n• *No se generan en sistemas con Agujero Negro o Estrella Extraña*",
         inline=False
     )
     
