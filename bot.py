@@ -158,6 +158,26 @@ def crear_embed_sistema(sistema):
                 inline=False
             )
     
+    # Agregar información de sondeo
+    sondeo = sistema.get('sondeo', {})
+    if sondeo.get('sondeo_exitoso'):
+        embed.add_field(
+            name="🔍 Sondeo",
+            value=f"**{sondeo.get('mensaje')}**",
+            inline=True
+        )
+        embed.add_field(
+            name="🏗️ Megaestructura Detectada",
+            value=f"**{sondeo.get('megaestructura')}**",
+            inline=True
+        )
+    else:
+        embed.add_field(
+            name="🔍 Sondeo",
+            value=sondeo.get('mensaje', 'Sondeo no exitoso'),
+            inline=True
+        )
+    
     # Añadir footer
     embed.set_footer(
         text="Generado para servidor de roleplay espacial",

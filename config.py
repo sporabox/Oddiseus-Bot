@@ -81,6 +81,41 @@ RECURSOS_AGUJERO_NEGRO = ['Materia Oscura']
 # Tipos de eventos especiales
 EVENTOS_ESPECIALES = ['Yacimiento Arqueológico', 'Anomalía']
 
+# Configuración de Sondeo
+SONDEO_PROBABILITY = 5  # 5% chance de sondeo exitoso (muy, muy bajo)
+
+# Megaestructuras y sus probabilidades
+MEGAESTRUCTURAS = {
+    'comunes': {
+        'probabilidad': 70,
+        'estructuras': [
+            "Mundo Anillo", "Asamblea Interestelar", "Megainstalacion de Artes", 
+            "Centro de Coordinación Estratégica", "Esfera Dyson", "Toroide de Stanford", 
+            "Cilindro O'Neill", "Esferas de Bernal", "Topopolis", "Gran archivo", 
+            "Forja de Arco", "Ecumenópolis"
+        ]
+    },
+    'poco_comunes': {
+        'probabilidad': 25,
+        'estructuras': [
+            "Catapulta Cuántica", "Nexo Científico", "Matriz Centinela", "Megastillero"
+        ]
+    },
+    'muy_raras': {
+        'probabilidad': 5,
+        'estructuras': [
+            "Cerebro Matriohska", "Descompresor de Materia"
+        ]
+    }
+}
+
+# Megaestructuras con restricciones de sistema
+MEGAESTRUCTURAS_RESTRICCIONES = {
+    'Esfera Dyson': ['Tipo F', 'Tipo G', 'Tipo K', 'Tipo O'],
+    'Catapulta Cuántica': ['Estrella de Neutrones', 'Pulsar', 'Magnetar'],
+    'Descompresor de Materia': ['Agujero Negro']
+}
+
 # Rangos para planetas habitables en sistemas habitables
 PLANETAS_HABITABLES_RANGE = (1, 3)
 

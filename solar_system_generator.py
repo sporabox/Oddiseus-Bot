@@ -3,7 +3,8 @@ import secrets
 from config import (STAR_PROBABILITIES, SYSTEM_PROBABILITIES, HABITABLE_STARS, DANGEROUS_STARS, 
                    NO_BODIES_STARS, DEPOSITOS_PROBABILITY, RECURSOS_ESTRATEGICOS, 
                    RECURSOS_AGUJERO_NEGRO, EVENTO_ESPECIAL_PROBABILITY, EVENTOS_ESPECIALES,
-                   PLANETAS_HABITABLES_RANGE, TIPOS_PLANETAS)
+                   PLANETAS_HABITABLES_RANGE, TIPOS_PLANETAS, SONDEO_PROBABILITY,
+                   MEGAESTRUCTURAS, MEGAESTRUCTURAS_RESTRICCIONES)
 
 class SolarSystemGenerator:
     def __init__(self):
@@ -150,12 +151,14 @@ class SolarSystemGenerator:
         evento = self.generar_evento_especial()
         planetas_habitables = self.generar_planetas_habitables(habitabilidad)
         tipos_planetas = self.generar_tipos_planetas(planetas_habitables)
+        sondeo = self.generar_sondeo(estrellas)
         
         resultado.update({
             'depositos': depositos,
             'evento_especial': evento,
             'planetas_habitables': planetas_habitables,
-            'tipos_planetas': tipos_planetas
+            'tipos_planetas': tipos_planetas,
+            'sondeo': sondeo
         })
         
         return resultado
@@ -316,3 +319,48 @@ class SolarSystemGenerator:
             })
         
         return tipos_planetas
+    
+    def generar_sondeo(self, estrellas):
+        """Genera resultado de sondeo con posible megaestructura"""
+        # Muy, muy baja probabilidad de sondeo exitoso
+        if random.randint(1, 100) > SONDEO_PROBABILITY:
+            return {
+                'sondeo_exitoso': False,
+                'megaestructura': None,
+                'mensaje': "Sondeo no exitoso"
+            }
+        
+        # Sondeo exitoso - generar megaestructura
+        megaestructura = self.generar_megaestructura(estrellas)
+        
+        return {
+            'sondeo_exitoso': True,
+            'megaestructura': megaestructura,
+            'mensaje': "Sondeo exitoso"
+        }
+    
+    def generar_megaestructura(self, estrellas):
+        """Genera una megaestructura según las restricciones del sistema"""
+        # Obtener todas las megaestructuras disponibles
+        megaestructuras_disponibles = []
+        probabilidades = []
+        
+        for categoria, datos in MEGAESTRUCTURAS.items():
+            for estructura in datos['estructuras']:
+                # Verificar restricciones
+                if estructura in MEGAESTRUCTURAS_RESTRICCIONES:
+                    tipos_permitidos = MEGAESTRUCTURAS_RESTRICCIONES[estructura]
+                    if not any(estrella in tipos_permitidos for estrella in estrellas):
+                        continue  # Saltar esta megaestructura
+                
+                megaestructuras_disponibles.append(estructura)
+                probabilidades.append(datos['probabilidad'])
+        
+        # Si no hay megaestructuras disponibles, seleccionar una común genérica
+        if not megaestructuras_disponibles:
+            estructuras_comunes = [e for e in MEGAESTRUCTURAS['comunes']['estructuras'] 
+                                 if e not in MEGAESTRUCTURAS_RESTRICCIONES]
+            return random.choice(estructuras_comunes)
+        
+        # Seleccionar megaestructura con probabilidades ponderadas
+        return self._weighted_choice(megaestructuras_disponibles, probabilidades)
