@@ -144,6 +144,19 @@ def crear_embed_sistema(sistema):
             value=f"**{planetas_habitables}** planetas habitables en el sistema",
             inline=True
         )
+        
+        # Agregar tipos de planetas
+        tipos_planetas = sistema.get('tipos_planetas', [])
+        if tipos_planetas:
+            tipos_texto = []
+            for i, planeta in enumerate(tipos_planetas, 1):
+                tipos_texto.append(f"**Planeta {i}**: {planeta['tipo']} ({planeta['categoria']})")
+            
+            embed.add_field(
+                name="🪐 Tipo de Planetas",
+                value="\n".join(tipos_texto),
+                inline=False
+            )
     
     # Añadir footer
     embed.set_footer(

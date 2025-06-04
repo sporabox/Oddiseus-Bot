@@ -84,6 +84,56 @@ EVENTOS_ESPECIALES = ['Yacimiento Arqueológico', 'Anomalía']
 # Rangos para planetas habitables en sistemas habitables
 PLANETAS_HABITABLES_RANGE = (1, 3)
 
+# Tipos de planetas y sus probabilidades
+TIPOS_PLANETAS = {
+    'Helados': {
+        'probabilidad': 30,
+        'planetas': [
+            "tundra", "alpino", "ártico", "Tormentoso", "Icebergs", "Glacial", 
+            "Antártico", "Eólico", "Desertico Frio", "Dunas de Hielo", "Grietas", 
+            "Púas de Hielo", "Crioflora", "Líquenes", "Pantanos", "Micelio", 
+            "Barro", "Basalto", "Tuya", "Criovolcánico", "Treelines", 
+            "Glaciovolcánico", "Lantánidos", "Borealis", "Nevado", 
+            "Mundo de las Alturas", "Bosques de Duna", "Fiordos", "Floreciente", "Taiga"
+        ]
+    },
+    'Secos': {
+        'probabilidad': 30,
+        'planetas': [
+            "desértico", "árido", "sabana", "Salado", "Acuífero", "Oasis", "Duna", 
+            "Outbacks", "Costero", "Hongos", "Arena de Hierro", "Cactus", "Coral", 
+            "Primitivo", "Mesa", "Desierto de Niebla", "Mediterráneo", "Badlands", 
+            "Suculentas", "Rayado, Amatista", "Sumideros", "Estepa", "Pradera", 
+            "Calcita", "Semiárido", "Álamos", "Turquesa"
+        ]
+    },
+    'Humedos': {
+        'probabilidad': 30,
+        'planetas': [
+            "continental", "megafloriano", "Petrificado", "Supercontinental", "Lagos", 
+            "boscoso", "tropical", "oceánico", "fungal", "musgoso", "arrecife", 
+            "cascadiano", "pantanico", "archipiélago", "riscoso", "niebla", 
+            "Mundo de alga", "pilares", "alganiano rosa", "geotérmico", 
+            "bioluminiscente", "atolonico", "tepuico", "manglares", "cenótico", 
+            "fúngico", "aereo"
+        ]
+    },
+    'Otros': {
+        'probabilidad': 7,
+        'planetas': [
+            "Tumba", "Reliquia", "Gaia", "Gaia seco", "Gaia frio", 
+            "Superhabitable humedo", "Superhabitable Frio", "Superhabitable Seco"
+        ]
+    },
+    'Exoticos': {
+        'probabilidad': 3,
+        'planetas': [
+            "Acido", "Radiotropical", "Hiceano", "Metanico", "Ceniza", 
+            "Amoniaco", "Sulfurico", "Pandorico", "cristalino"
+        ]
+    }
+}
+
 # Rangos para generación de cuerpos celestes
 PLANETS_RANGE = (1, 16)
 MOONS_RANGE = (1, 27)

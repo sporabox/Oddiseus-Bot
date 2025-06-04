@@ -3,7 +3,7 @@ import secrets
 from config import (STAR_PROBABILITIES, SYSTEM_PROBABILITIES, HABITABLE_STARS, DANGEROUS_STARS, 
                    NO_BODIES_STARS, DEPOSITOS_PROBABILITY, RECURSOS_ESTRATEGICOS, 
                    RECURSOS_AGUJERO_NEGRO, EVENTO_ESPECIAL_PROBABILITY, EVENTOS_ESPECIALES,
-                   PLANETAS_HABITABLES_RANGE)
+                   PLANETAS_HABITABLES_RANGE, TIPOS_PLANETAS)
 
 class SolarSystemGenerator:
     def __init__(self):
@@ -149,11 +149,13 @@ class SolarSystemGenerator:
         depositos = self.generar_depositos_recursos(estrellas)
         evento = self.generar_evento_especial()
         planetas_habitables = self.generar_planetas_habitables(habitabilidad)
+        tipos_planetas = self.generar_tipos_planetas(planetas_habitables)
         
         resultado.update({
             'depositos': depositos,
             'evento_especial': evento,
-            'planetas_habitables': planetas_habitables
+            'planetas_habitables': planetas_habitables,
+            'tipos_planetas': tipos_planetas
         })
         
         return resultado
@@ -288,3 +290,29 @@ class SolarSystemGenerator:
             return 0
         
         return random.randint(*PLANETAS_HABITABLES_RANGE)
+    
+    def generar_tipos_planetas(self, num_planetas_habitables):
+        """Genera los tipos de planetas habitables"""
+        if num_planetas_habitables == 0:
+            return []
+        
+        tipos_planetas = []
+        
+        # Obtener categorías y sus probabilidades
+        categorias = list(TIPOS_PLANETAS.keys())
+        probabilidades = [TIPOS_PLANETAS[cat]['probabilidad'] for cat in categorias]
+        
+        for _ in range(num_planetas_habitables):
+            # Seleccionar categoría
+            categoria = self._weighted_choice(categorias, probabilidades)
+            
+            # Seleccionar planeta específico de la categoría
+            planetas_categoria = TIPOS_PLANETAS[categoria]['planetas']
+            planeta = random.choice(planetas_categoria)
+            
+            tipos_planetas.append({
+                'categoria': categoria,
+                'tipo': planeta
+            })
+        
+        return tipos_planetas
