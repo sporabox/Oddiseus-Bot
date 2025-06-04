@@ -21,6 +21,7 @@ STAR_PROBABILITIES = {
     # Estrellas raras
     'Gigante Roja': 150,        # Peligrosa
     'Pulsar': 100,              # Muy peligrosa
+    'Estrella de Neutrones': 100, # Muy peligrosa
     'Agujero Negro': 30,        # Extremadamente peligrosa
     'Magnetar': 10,             # Muy rara y peligrosa
     
@@ -41,6 +42,7 @@ HABITABLE_STARS = [
 DANGEROUS_STARS = [
     'Gigante Roja',
     'Pulsar',
+    'Estrella de Neutrones',
     'Agujero Negro',
     'Estrella Extraña',
     'Magnetar',
@@ -83,6 +85,51 @@ EVENTOS_ESPECIALES = ['Yacimiento Arqueológico', 'Anomalía']
 
 # Configuración de Sondeo
 SONDEO_PROBABILITY = 5  # 5% chance de sondeo exitoso (muy, muy bajo)
+
+# Configuración de Leviatanes
+LEVIATANES_PROBABILITY = 20  # 20% chance de leviatanes (raro pero no tanto)
+
+# Leviatanes y sus restricciones
+LEVIATANES = [
+    "Nubes de Vacío",
+    "Dragones espaciales", 
+    "Amebas espaciales",
+    "Entidades cristalinas",
+    "Tiyankis",
+    "Colmenas de asteroides",
+    "Calamares fantasma",
+    "Estelaritas",
+    "Engendros del vacío",
+    "Horrores dimensionales", 
+    "Drones mineros antiguos",
+    "Cutoloides",
+    "Gusanos del vacío"
+]
+
+# Restricciones de leviatanes por tipo de sistema
+LEVIATANES_RESTRICCIONES = {
+    # No pueden aparecer en ciertos sistemas
+    "Dragones espaciales": {
+        "prohibidos": ["Agujero Negro", "Magnetar", "Pulsar", "Estrella de Neutrones"]
+    },
+    "Estelaritas": {
+        "prohibidos": ["Agujero Negro", "Magnetar", "Pulsar", "Estrella de Neutrones"]
+    },
+    
+    # Solo pueden aparecer en ciertos sistemas
+    "Entidades cristalinas": {
+        "solo_en": ["Estrella de Neutrones", "Pulsar", "Magnetar"]
+    },
+    "Calamares fantasma": {
+        "solo_en": ["Estrella de Neutrones", "Pulsar", "Magnetar"]
+    },
+    "Engendros del vacío": {
+        "solo_en": ["Tipo G"]
+    },
+    "Gusanos del vacío": {
+        "solo_en": ["Agujero Negro"]
+    }
+}
 
 # Megaestructuras y sus probabilidades
 MEGAESTRUCTURAS = {
@@ -173,6 +220,77 @@ TIPOS_PLANETAS = {
 PLANETS_RANGE = (1, 16)
 MOONS_RANGE = (1, 27)
 ASTEROID_BELTS_RANGE = (0, 3)
+
+# Configuración de Especies
+ESPECIES_PROBABILITY = 10  # 10% chance de especies (muy, muy raro)
+
+# Tipos de especies
+TIPOS_ESPECIES = [
+    "Maquina", "Mamiferas", "Toxoides", "Necronas", "Reptilianas", 
+    "Acuaticas", "Moluscoides", "Aviares", "Litoideas", "Fungicas", 
+    "Plantoides", "Antropodas"
+]
+
+# Niveles tecnológicos
+NIVELES_TECNOLOGICOS = [
+    "Edad de Piedra", "Edad de Bronce", "Edad de Hierro", "Renacimiento",
+    "Edad del Vapor", "Era Industrial", "Edad de las Máquinas", 
+    "Era Atómica", "Era Espacial Inicial"
+]
+
+# Rasgos positivos y sus restricciones
+RASGOS_POSITIVOS = {
+    "Agrarios": [],
+    "Ingeniosos": [],
+    "Laboriosos": [],
+    "Inteligentes": [],
+    "Negociantes natos": [],
+    "Ingenieros natos": [],
+    "Físicos natos": [],
+    "Sociólogos natos": [],
+    "Muy adaptables": ["Litoideas", "Toxoides", "Maquina", "Necronas"],
+    "Adaptables": [],
+    "Reproductores rápidos": ["Necronas", "Fungicas", "Maquina", "Antropodas"],
+    "Talentosos": [],
+    "Aprendizaje rápido": [],
+    "Tradicionistas": [],
+    "Dóciles": [],
+    "Muy fuertes": ["Maquina", "Litoideas"],
+    "Fuertes": [],
+    "Nómadas": [],
+    "Comunales": [],
+    "Carismáticos": [],
+    "Conformistas": [],
+    "Venerables": ["Maquina", "Litoideas"],
+    "Duraderos": ["Plantoides", "Fungicas", "Moluscoides", "Acuaticas", "Necronas"],
+    "Resilientes": [],
+    "Conservacionistas": []
+}
+
+# Rasgos negativos y sus restricciones
+RASGOS_NEGATIVOS = {
+    "Poco adaptables": [],
+    "Reproductores lentos": ["Acuaticas", "Litoideas"],
+    "Aprendizaje lento": [],
+    "Beligerantes": [],
+    "Rebeldes": [],
+    "Débiles": [],
+    "Sedentarios": [],
+    "Solitarios": [],
+    "Repugnantes": [],
+    "Desviados": [],
+    "Efímeros": ["Mamiferas", "Reptilianas", "Aviares", "Antropodas"],
+    "Decadentes": [],
+    "Derrochadores": []
+}
+
+# Rasgos que se excluyen mutuamente
+RASGOS_EXCLUSIVOS = {
+    "Inteligentes": ["Ingenieros natos", "Físicos natos", "Sociólogos natos"],
+    "Ingenieros natos": ["Inteligentes"],
+    "Físicos natos": ["Inteligentes"],
+    "Sociólogos natos": ["Inteligentes"]
+}
 
 # Configuración de logging
 LOG_LEVEL = 'INFO'

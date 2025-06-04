@@ -4,7 +4,9 @@ from config import (STAR_PROBABILITIES, SYSTEM_PROBABILITIES, HABITABLE_STARS, D
                    NO_BODIES_STARS, DEPOSITOS_PROBABILITY, RECURSOS_ESTRATEGICOS, 
                    RECURSOS_AGUJERO_NEGRO, EVENTO_ESPECIAL_PROBABILITY, EVENTOS_ESPECIALES,
                    PLANETAS_HABITABLES_RANGE, TIPOS_PLANETAS, SONDEO_PROBABILITY,
-                   MEGAESTRUCTURAS, MEGAESTRUCTURAS_RESTRICCIONES)
+                   MEGAESTRUCTURAS, MEGAESTRUCTURAS_RESTRICCIONES, LEVIATANES_PROBABILITY,
+                   LEVIATANES, LEVIATANES_RESTRICCIONES, ESPECIES_PROBABILITY, TIPOS_ESPECIES,
+                   NIVELES_TECNOLOGICOS, RASGOS_POSITIVOS, RASGOS_NEGATIVOS, RASGOS_EXCLUSIVOS)
 
 class SolarSystemGenerator:
     def __init__(self):
@@ -152,13 +154,17 @@ class SolarSystemGenerator:
         planetas_habitables = self.generar_planetas_habitables(habitabilidad)
         tipos_planetas = self.generar_tipos_planetas(planetas_habitables)
         sondeo = self.generar_sondeo(estrellas)
+        leviatanes = self.generar_leviatanes(estrellas)
+        especies = self.generar_especies(habitabilidad)
         
         resultado.update({
             'depositos': depositos,
             'evento_especial': evento,
             'planetas_habitables': planetas_habitables,
             'tipos_planetas': tipos_planetas,
-            'sondeo': sondeo
+            'sondeo': sondeo,
+            'leviatanes': leviatanes,
+            'especies': especies
         })
         
         return resultado
@@ -232,6 +238,11 @@ class SolarSystemGenerator:
                 'descripcion': 'Estrella azul, la más masiva y caliente',
                 'temperatura': 'Extrema (>30000K)',
                 'longevidad': 'Muy corta (1-10 millones años)'
+            },
+            'Estrella de Neutrones': {
+                'descripcion': 'Remanente estelar ultra-denso',
+                'temperatura': 'Extrema (millones de K)',
+                'longevidad': 'Muy alta (miles de millones años)'
             }
         }
         
@@ -364,3 +375,135 @@ class SolarSystemGenerator:
         
         # Seleccionar megaestructura con probabilidades ponderadas
         return self._weighted_choice(megaestructuras_disponibles, probabilidades)
+    
+    def generar_leviatanes(self, estrellas):
+        """Genera leviatanes en el sistema según las restricciones"""
+        # Verificar probabilidad de leviatanes
+        if random.randint(1, 100) > LEVIATANES_PROBABILITY:
+            return {
+                'tiene_leviatanes': False,
+                'leviatan': None
+            }
+        
+        # Obtener leviatanes disponibles según las estrellas del sistema
+        leviatanes_disponibles = []
+        
+        for leviatan in LEVIATANES:
+            puede_aparecer = True
+            
+            # Verificar restricciones si las hay
+            if leviatan in LEVIATANES_RESTRICCIONES:
+                restriccion = LEVIATANES_RESTRICCIONES[leviatan]
+                
+                # Verificar si está prohibido en alguna estrella del sistema
+                if 'prohibidos' in restriccion:
+                    for estrella in estrellas:
+                        if estrella in restriccion['prohibidos']:
+                            puede_aparecer = False
+                            break
+                
+                # Verificar si solo puede aparecer en ciertos sistemas
+                if 'solo_en' in restriccion and puede_aparecer:
+                    puede_aparecer = False
+                    for estrella in estrellas:
+                        if estrella in restriccion['solo_en']:
+                            puede_aparecer = True
+                            break
+            
+            if puede_aparecer:
+                leviatanes_disponibles.append(leviatan)
+        
+        # Si no hay leviatanes disponibles, no generar ninguno
+        if not leviatanes_disponibles:
+            return {
+                'tiene_leviatanes': False,
+                'leviatan': None
+            }
+        
+        # Seleccionar un leviatan aleatoriamente
+        leviatan_seleccionado = random.choice(leviatanes_disponibles)
+        
+        return {
+            'tiene_leviatanes': True,
+            'leviatan': leviatan_seleccionado
+        }
+    
+    def generar_especies(self, habitabilidad):
+        """Genera especies si el sistema es habitable y hay probabilidad"""
+        # Solo puede aparecer en sistemas habitables
+        if habitabilidad != "Habitable":
+            return {
+                'tiene_especies': False,
+                'tipo_especie': None,
+                'nivel_tecnologico': None,
+                'rasgos_positivos': [],
+                'rasgos_negativos': []
+            }
+        
+        # Verificar probabilidad muy baja de especies
+        if random.randint(1, 100) > ESPECIES_PROBABILITY:
+            return {
+                'tiene_especies': False,
+                'tipo_especie': None,
+                'nivel_tecnologico': None,
+                'rasgos_positivos': [],
+                'rasgos_negativos': []
+            }
+        
+        # Generar especie
+        tipo_especie = random.choice(TIPOS_ESPECIES)
+        nivel_tecnologico = random.choice(NIVELES_TECNOLOGICOS)
+        rasgos_positivos = self.generar_rasgos_positivos(tipo_especie)
+        rasgos_negativos = self.generar_rasgos_negativos(tipo_especie)
+        
+        return {
+            'tiene_especies': True,
+            'tipo_especie': tipo_especie,
+            'nivel_tecnologico': nivel_tecnologico,
+            'rasgos_positivos': rasgos_positivos,
+            'rasgos_negativos': rasgos_negativos
+        }
+    
+    def generar_rasgos_positivos(self, tipo_especie):
+        """Genera 3 rasgos positivos únicos considerando restricciones"""
+        rasgos_disponibles = []
+        
+        # Filtrar rasgos que pueden ser usados por esta especie
+        for rasgo, especies_permitidas in RASGOS_POSITIVOS.items():
+            if not especies_permitidas or tipo_especie in especies_permitidas:
+                rasgos_disponibles.append(rasgo)
+        
+        rasgos_seleccionados = []
+        
+        # Seleccionar 3 rasgos únicos
+        while len(rasgos_seleccionados) < 3 and rasgos_disponibles:
+            rasgo = random.choice(rasgos_disponibles)
+            rasgos_disponibles.remove(rasgo)
+            rasgos_seleccionados.append(rasgo)
+            
+            # Verificar exclusiones
+            if rasgo in RASGOS_EXCLUSIVOS:
+                for rasgo_excluido in RASGOS_EXCLUSIVOS[rasgo]:
+                    if rasgo_excluido in rasgos_disponibles:
+                        rasgos_disponibles.remove(rasgo_excluido)
+        
+        return rasgos_seleccionados
+    
+    def generar_rasgos_negativos(self, tipo_especie):
+        """Genera 2 rasgos negativos únicos considerando restricciones"""
+        rasgos_disponibles = []
+        
+        # Filtrar rasgos que pueden ser usados por esta especie
+        for rasgo, especies_permitidas in RASGOS_NEGATIVOS.items():
+            if not especies_permitidas or tipo_especie in especies_permitidas:
+                rasgos_disponibles.append(rasgo)
+        
+        rasgos_seleccionados = []
+        
+        # Seleccionar 2 rasgos únicos
+        while len(rasgos_seleccionados) < 2 and rasgos_disponibles:
+            rasgo = random.choice(rasgos_disponibles)
+            rasgos_disponibles.remove(rasgo)
+            rasgos_seleccionados.append(rasgo)
+        
+        return rasgos_seleccionados

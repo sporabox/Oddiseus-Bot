@@ -178,6 +178,48 @@ def crear_embed_sistema(sistema):
             inline=True
         )
     
+    # Agregar información de leviatanes
+    leviatanes = sistema.get('leviatanes', {})
+    if leviatanes.get('tiene_leviatanes'):
+        embed.add_field(
+            name="🐉 Leviatanes",
+            value=f"**{leviatanes.get('leviatan')}** detectado en el sistema",
+            inline=False
+        )
+    else:
+        embed.add_field(
+            name="🐉 Leviatanes",
+            value="No se detectaron leviatanes en el sistema",
+            inline=False
+        )
+    
+    # Agregar información de especies (muy raro)
+    especies = sistema.get('especies', {})
+    if especies.get('tiene_especies'):
+        embed.add_field(
+            name="👽 Especies Detectadas",
+            value=f"**Tipo:** {especies.get('tipo_especie')}\n**Nivel Tecnológico:** {especies.get('nivel_tecnologico')}",
+            inline=False
+        )
+        
+        # Rasgos positivos
+        rasgos_positivos = especies.get('rasgos_positivos', [])
+        if rasgos_positivos:
+            embed.add_field(
+                name="✅ Rasgos Positivos",
+                value="\n".join([f"• {rasgo}" for rasgo in rasgos_positivos]),
+                inline=True
+            )
+        
+        # Rasgos negativos
+        rasgos_negativos = especies.get('rasgos_negativos', [])
+        if rasgos_negativos:
+            embed.add_field(
+                name="❌ Rasgos Negativos",
+                value="\n".join([f"• {rasgo}" for rasgo in rasgos_negativos]),
+                inline=True
+            )
+    
     # Añadir footer
     embed.set_footer(
         text="Generado para servidor de roleplay espacial",
