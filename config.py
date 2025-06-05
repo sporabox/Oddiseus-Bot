@@ -137,8 +137,7 @@ MEGAESTRUCTURAS = {
         'probabilidad': 70,
         'estructuras': [
             "Mundo Anillo", "Asamblea Interestelar", "Megainstalacion de Artes", 
-            "Centro de Coordinación Estratégica", "Esfera Dyson", "Toroide de Stanford", 
-            "Cilindro O'Neill", "Esferas de Bernal", "Topopolis", "Gran archivo", 
+            "Centro de Coordinación Estratégica", "Esfera Dyson", "Gran archivo", 
             "Forja de Arco", "Ecumenópolis"
         ]
     },
