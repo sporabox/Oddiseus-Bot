@@ -59,7 +59,7 @@ NO_BODIES_STARS = [
 EVENTO_ESPECIAL_PROBABILITY = 15  # 15% de chance de evento especial
 
 # Probabilidades de recursos estratégicos
-DEPOSITOS_PROBABILITY = 25  # 25% de chance de tener depósitos
+DEPOSITOS_PROBABILITY = 15  # 15% de chance de tener depósitos
 
 RECURSOS_ESTRATEGICOS = {
     # Recursos más comunes

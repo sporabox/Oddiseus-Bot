@@ -6,7 +6,7 @@ from solar_system_generator import SolarSystemGenerator
 class SolarSystemBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
-        # No usar intents privilegiados para evitar errores de permisos
+        intents.message_content = True  # Enable message content intent for ! commands
         
         super().__init__(
             command_prefix='!',
@@ -18,19 +18,30 @@ class SolarSystemBot(commands.Bot):
         
     async def setup_hook(self):
         """Se ejecuta cuando el bot se está configurando"""
-        await setup_commands(self)
+        # Add slash commands directly to tree
+        self.tree.add_command(generar_sistema_slash)
+        self.tree.add_command(ayuda_sistema_slash)
+        
+        # Sync commands immediately
+        try:
+            synced = await self.tree.sync()
+            logging.info(f'Comandos sincronizados en setup_hook: {len(synced)}')
+        except Exception as e:
+            logging.error(f'Error en setup_hook sync: {e}')
         
     async def on_ready(self):
         """Evento que se ejecuta cuando el bot está listo"""
         logging.info(f'{self.user} se ha conectado a Discord!')
         logging.info(f'Bot está en {len(self.guilds)} servidores')
         
-        # Sincronizar comandos slash
+        # Force sync commands again on ready
         try:
             synced = await self.tree.sync()
-            logging.info(f'Sincronizados {len(synced)} comandos slash')
+            logging.info(f'Comandos sincronizados en on_ready: {len(synced)}')
+            for cmd in synced:
+                logging.info(f'Comando sincronizado: {cmd.name}')
         except Exception as e:
-            logging.error(f'Error al sincronizar comandos: {e}')
+            logging.error(f'Error al sincronizar comandos en on_ready: {e}')
     
     async def on_guild_join(self, guild):
         """Evento cuando el bot se une a un servidor"""
@@ -360,13 +371,4 @@ async def ayuda_comando(ctx):
     
     await ctx.send(embed=embed)
 
-# Añadir comandos al bot
-async def setup_commands(bot):
-    """Configura los comandos del bot"""
-    # Comandos slash
-    bot.tree.add_command(generar_sistema_slash)
-    bot.tree.add_command(ayuda_sistema_slash)
-    
-    # Comandos tradicionales
-    bot.add_command(generar_comando)
-    bot.add_command(ayuda_comando)
+# This function is no longer needed - commands are registered in setup_hook

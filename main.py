@@ -25,6 +25,11 @@ async def main():
     # Crear e iniciar el bot
     bot = SolarSystemBot()
     
+    # Add traditional commands
+    from bot import generar_comando, ayuda_comando
+    bot.add_command(generar_comando)
+    bot.add_command(ayuda_comando)
+    
     try:
         await bot.start(token)
     except KeyboardInterrupt:
