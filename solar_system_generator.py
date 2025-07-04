@@ -157,6 +157,15 @@ class SolarSystemGenerator:
         leviatanes = self.generar_leviatanes(estrellas)
         especies = self.generar_especies(habitabilidad)
 
+        # Generar tipos de planetas inhabitables si es necesario
+        if habitabilidad == "Inhabitable" and generar_cuerpos:
+            total_planetas = resultado.get('total_planetas', 0)
+            tipos_planetas_inhabitables, lunas_gaseoso = self.generar_tipos_planetas_inhabitables(habitabilidad, total_planetas)
+            resultado.update({
+                'tipos_planetas_inhabitables': tipos_planetas_inhabitables,
+                'lunas_planeta_gaseoso': lunas_gaseoso
+            })
+
         resultado.update({
             'depositos': depositos,
             'evento_especial': evento,

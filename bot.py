@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import logging
 from solar_system_generator import SolarSystemGenerator
+from database import SystemDatabase
 
 class SolarSystemBot(commands.Bot):
     def __init__(self):
@@ -15,11 +16,14 @@ class SolarSystemBot(commands.Bot):
         )
 
         self.generator = SolarSystemGenerator()
+        self.database = SystemDatabase()
 
     async def setup_hook(self):
         """Se ejecuta cuando el bot se está configurando"""
         # Add slash commands directly to tree
         self.tree.add_command(generar_sistema_slash)
+        self.tree.add_command(ficha_sistema_slash)
+        self.tree.add_command(stats_exploracion_slash)
         self.tree.add_command(ayuda_sistema_slash)
 
         # Sync commands immediately
@@ -52,10 +56,11 @@ class SolarSystemBot(commands.Bot):
         logging.info(f'Bot salió del servidor: {guild.name} (ID: {guild.id})')
 
 # Función para crear embed del sistema
-def crear_embed_sistema(sistema):
+def crear_embed_sistema(sistema, nombre_sistema=None):
     """Crea un embed para mostrar el sistema solar generado"""
+    title = f"🌌 Sistema Solar: {nombre_sistema}" if nombre_sistema else "🌌 Sistema Solar Generado"
     embed = discord.Embed(
-        title="🌌 Sistema Solar Generado",
+        title=title,
         color=0x1E88E5,
         description="Sistema generado para roleplay de naciones espaciales"
     )
@@ -263,7 +268,8 @@ def crear_embed_sistema(sistema):
 
 # Configurar comandos slash
 @discord.app_commands.command(name="generar_sistema", description="Genera un sistema solar aleatorio para roleplay")
-async def generar_sistema_slash(interaction: discord.Interaction):
+@discord.app_commands.describe(nombre="Nombre del sistema (opcional) - se guardará en la base de datos")
+async def generar_sistema_slash(interaction: discord.Interaction, nombre: str = None):
     """Comando slash para generar un sistema solar aleatorio"""
     try:
         # Generar el sistema solar
@@ -275,18 +281,136 @@ async def generar_sistema_slash(interaction: discord.Interaction):
             from solar_system_generator import SolarSystemGenerator
             generator = SolarSystemGenerator()
             sistema = generator.generar_sistema_completo()
-        embed = crear_embed_sistema(sistema)
+
+        # Si se proporcionó un nombre, guardar en la base de datos
+        if nombre:
+            if bot_instance.database.system_exists(nombre):
+                # Advertir pero permitir duplicados
+                embed = crear_embed_sistema(sistema, nombre)
+                embed.add_field(
+                    name="⚠️ Advertencia",
+                    value=f"Ya existe un sistema con el nombre '{nombre}', pero se ha permitido el duplicado.",
+                    inline=False
+                )
+            else:
+                embed = crear_embed_sistema(sistema, nombre)
+            
+            # Guardar en la base de datos
+            bot_instance.database.add_system(nombre, interaction.user.id, interaction.user.name, sistema)
+            
+            embed.add_field(
+                name="💾 Sistema Guardado",
+                value=f"Sistema '{nombre}' guardado exitosamente. Usa `/ficha_sistema {nombre}` para verlo más tarde.",
+                inline=False
+            )
+        else:
+            embed = crear_embed_sistema(sistema)
 
         await interaction.response.send_message(embed=embed)
 
         # Log del sistema generado
         guild_name = interaction.guild.name if interaction.guild else "DM"
-        logging.info(f"Sistema generado para {interaction.user.name} en {guild_name}: {sistema['tipo_sistema']}")
+        nombre_log = f" - {nombre}" if nombre else ""
+        logging.info(f"Sistema generado para {interaction.user.name} en {guild_name}: {sistema['tipo_sistema']}{nombre_log}")
 
     except Exception as e:
         logging.error(f"Error al generar sistema: {e}")
         await interaction.response.send_message(
             "❌ Ocurrió un error al generar el sistema solar. Por favor, inténtalo de nuevo.", 
+            ephemeral=True
+        )
+
+@discord.app_commands.command(name="ficha_sistema", description="Muestra la ficha detallada de un sistema guardado")
+@discord.app_commands.describe(nombre="Nombre del sistema a consultar")
+async def ficha_sistema_slash(interaction: discord.Interaction, nombre: str):
+    """Comando slash para mostrar la ficha de un sistema guardado"""
+    try:
+        bot_instance = interaction.client
+        
+        # Buscar el sistema en la base de datos
+        sistema_info = bot_instance.database.get_system(nombre)
+        
+        if not sistema_info:
+            await interaction.response.send_message(
+                f"❌ No se encontró el sistema '{nombre}' en la base de datos.",
+                ephemeral=True
+            )
+            return
+        
+        # Crear embed con la información del sistema
+        sistema_data = sistema_info['system_data']
+        embed = crear_embed_sistema(sistema_data, sistema_info['original_name'])
+        
+        # Añadir información de exploración
+        embed.add_field(
+            name="🧭 Información de Exploración",
+            value=f"**Explorador:** {sistema_info['explorer_name']}\n**Fecha:** {sistema_info['timestamp'][:10]}\n**Hora:** {sistema_info['timestamp'][11:19]}",
+            inline=False
+        )
+        
+        await interaction.response.send_message(embed=embed)
+        
+        # Log
+        guild_name = interaction.guild.name if interaction.guild else "DM"
+        logging.info(f"Ficha de sistema '{nombre}' consultada por {interaction.user.name} en {guild_name}")
+        
+    except Exception as e:
+        logging.error(f"Error al consultar ficha de sistema: {e}")
+        await interaction.response.send_message(
+            "❌ Ocurrió un error al consultar la ficha del sistema.", 
+            ephemeral=True
+        )
+
+@discord.app_commands.command(name="stats_exploracion", description="Muestra estadísticas del servidor y ranking de exploradores")
+async def stats_exploracion_slash(interaction: discord.Interaction):
+    """Comando slash para mostrar estadísticas de exploración"""
+    try:
+        bot_instance = interaction.client
+        
+        # Obtener estadísticas
+        total_systems = bot_instance.database.get_total_systems()
+        top_explorers = bot_instance.database.get_top_explorers(5)
+        
+        embed = discord.Embed(
+            title="📊 Estadísticas de Exploración",
+            color=0x4CAF50,
+            description="Estadísticas de sistemas explorados en este servidor"
+        )
+        
+        embed.add_field(
+            name="🌌 Total de Sistemas Explorados",
+            value=f"**{total_systems}** sistemas han sido explorados y guardados",
+            inline=False
+        )
+        
+        if top_explorers:
+            explorer_text = ""
+            for i, (user_id, data) in enumerate(top_explorers, 1):
+                medal = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else f"{i}."
+                explorer_text += f"{medal} **{data['name']}** - {data['systems_explored']} sistemas\n"
+            
+            embed.add_field(
+                name="🏆 Top Exploradores",
+                value=explorer_text,
+                inline=False
+            )
+        else:
+            embed.add_field(
+                name="🏆 Top Exploradores",
+                value="No hay datos de exploradores aún",
+                inline=False
+            )
+        
+        await interaction.response.send_message(embed=embed)
+        
+        # Log
+        guild_name = interaction.guild.name if interaction.guild else "DM"
+        logging.info(f"Estadísticas consultadas por {interaction.user.name} en {guild_name}")
+        
+    except Exception as e:
+        logging.error(f"Error al consultar estadísticas: {e}")
+        await interaction.response.send_message(
+            "❌ Ocurrió un error al consultar las estadísticas.", 
             ephemeral=True
         )
 

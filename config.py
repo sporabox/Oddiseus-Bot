@@ -11,23 +11,23 @@ STAR_PROBABILITIES = {
     # Estrellas más comunes - No habitables
     'Estrella Clase M': 4000,   # La más común
     'Tipo T': 1500,             # Enana marrón
-    
+
     # Estrellas habitables - Menos comunes
     'Tipo K': 800,              # Habitable pero menos común
     'Tipo G': 700,              # Como nuestro Sol
     'Tipo F': 600,              # Habitable pero menos común
     'Tipo A': 400,              # Habitable pero rara
-    
+
     # Estrellas raras
     'Gigante Roja': 150,        # Peligrosa
-    'Pulsar': 100,              # Muy peligrosa
-    'Estrella de Neutrones': 100, # Muy peligrosa
-    'Agujero Negro': 30,        # Extremadamente peligrosa
-    'Magnetar': 10,             # Muy rara y peligrosa
-    
+    'Pulsar': 140,              # Muy peligrosa
+    'Estrella de Neutrones': 140, # Muy peligrosa
+    'Agujero Negro': 60,        # Extremadamente peligrosa
+    'Magnetar': 30,             # Muy rara y peligrosa
+
     # Estrellas extremadamente raras
     'Estrella Extraña': 3,      # Hipotética
-    'Tipo O': 2                 # Muy masiva y rara
+    'Tipo O': 15               # Muy masiva y rara
 }
 
 # Estrellas que hacen habitable un sistema
@@ -66,13 +66,13 @@ RECURSOS_ESTRATEGICOS = {
     'Gases Exóticos': 30,
     'Cristales Raros': 30,
     'Polvo Zro': 25,
-    
+
     # Recursos poco comunes
     'Motas Volátiles': 10,
-    
+
     # Recursos muy poco comunes
     'Metal Vivo': 4,
-    
+
     # Recursos extremadamente raros
     'Nanitos': 1
 }
@@ -115,7 +115,7 @@ LEVIATANES_RESTRICCIONES = {
     "Estelaritas": {
         "prohibidos": ["Agujero Negro", "Magnetar", "Pulsar", "Estrella de Neutrones"]
     },
-    
+
     # Solo pueden aparecer en ciertos sistemas
     "Entidades cristalinas": {
         "solo_en": ["Estrella de Neutrones", "Pulsar", "Magnetar"]
