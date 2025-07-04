@@ -7,33 +7,33 @@ class SolarSystemBot(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True  # Enable message content intent for ! commands
-        
+
         super().__init__(
             command_prefix='!',
             intents=intents,
             description='Bot generador de sistemas solares para roleplay espacial'
         )
-        
+
         self.generator = SolarSystemGenerator()
-        
+
     async def setup_hook(self):
         """Se ejecuta cuando el bot se está configurando"""
         # Add slash commands directly to tree
         self.tree.add_command(generar_sistema_slash)
         self.tree.add_command(ayuda_sistema_slash)
-        
+
         # Sync commands immediately
         try:
             synced = await self.tree.sync()
             logging.info(f'Comandos sincronizados en setup_hook: {len(synced)}')
         except Exception as e:
             logging.error(f'Error en setup_hook sync: {e}')
-        
+
     async def on_ready(self):
         """Evento que se ejecuta cuando el bot está listo"""
         logging.info(f'{self.user} se ha conectado a Discord!')
         logging.info(f'Bot está en {len(self.guilds)} servidores')
-        
+
         # Force sync commands again on ready
         try:
             synced = await self.tree.sync()
@@ -42,11 +42,11 @@ class SolarSystemBot(commands.Bot):
                 logging.info(f'Comando sincronizado: {cmd.name}')
         except Exception as e:
             logging.error(f'Error al sincronizar comandos en on_ready: {e}')
-    
+
     async def on_guild_join(self, guild):
         """Evento cuando el bot se une a un servidor"""
         logging.info(f'Bot se unió al servidor: {guild.name} (ID: {guild.id})')
-    
+
     async def on_guild_remove(self, guild):
         """Evento cuando el bot sale de un servidor"""
         logging.info(f'Bot salió del servidor: {guild.name} (ID: {guild.id})')
@@ -59,14 +59,14 @@ def crear_embed_sistema(sistema):
         color=0x1E88E5,
         description="Sistema generado para roleplay de naciones espaciales"
     )
-    
+
     # Añadir información del tipo de sistema
     embed.add_field(
         name="📊 Tipo de Sistema",
         value=sistema['tipo_sistema'],
         inline=True
     )
-    
+
     # Añadir información de las estrellas
     estrellas_texto = "\n".join([f"• {estrella}" for estrella in sistema['estrellas']])
     embed.add_field(
@@ -74,7 +74,7 @@ def crear_embed_sistema(sistema):
         value=estrellas_texto,
         inline=True
     )
-    
+
     # Añadir habitabilidad
     habitabilidad_emoji = "✅" if sistema['habitabilidad'] == "Habitable" else "❌"
     embed.add_field(
@@ -82,7 +82,7 @@ def crear_embed_sistema(sistema):
         value=f"{habitabilidad_emoji} {sistema['habitabilidad']}",
         inline=True
     )
-    
+
     # Añadir información de cuerpos celestes si aplica
     if sistema['generar_cuerpos']:
         # Mostrar distribución por estrella
@@ -91,14 +91,14 @@ def crear_embed_sistema(sistema):
             for estrella, cuerpos in sistema['cuerpos_por_estrella'].items():
                 if cuerpos['planetas'] > 0 or cuerpos['lunas'] > 0:
                     distribuciones.append(f"**{estrella}**\n🪐 {cuerpos['planetas']} planetas\n🌙 {cuerpos['lunas']} lunas")
-            
+
             if distribuciones:
                 embed.add_field(
                     name="🌌 Distribución de Cuerpos Celestes",
                     value="\n\n".join(distribuciones),
                     inline=False
                 )
-        
+
         # Totales y asteroides
         embed.add_field(
             name="📊 Totales del Sistema",
@@ -111,7 +111,7 @@ def crear_embed_sistema(sistema):
             value="No se generan debido a condiciones extremas del sistema",
             inline=False
         )
-    
+
     # Agregar información de depósitos de recursos
     depositos = sistema.get('depositos', {})
     embed.add_field(
@@ -119,14 +119,14 @@ def crear_embed_sistema(sistema):
         value=depositos.get('mensaje', 'No hay información disponible'),
         inline=False
     )
-    
+
     if depositos.get('tiene_depositos'):
         embed.add_field(
             name="🔹 Recurso Estratégico",
             value=depositos.get('recurso', 'Desconocido'),
             inline=True
         )
-    
+
     # Agregar información de evento especial
     evento = sistema.get('evento_especial', {})
     if evento.get('tiene_evento'):
@@ -146,7 +146,7 @@ def crear_embed_sistema(sistema):
             value="No hay eventos especiales en este sistema",
             inline=False
         )
-    
+
     # Agregar información de planetas habitables
     if sistema['habitabilidad'] == "Habitable":
         planetas_habitables = sistema.get('planetas_habitables', 0)
@@ -155,20 +155,20 @@ def crear_embed_sistema(sistema):
             value=f"**{planetas_habitables}** planetas habitables en el sistema",
             inline=True
         )
-        
+
         # Agregar tipos de planetas
         tipos_planetas = sistema.get('tipos_planetas', [])
         if tipos_planetas:
             tipos_texto = []
             for i, planeta in enumerate(tipos_planetas, 1):
                 tipos_texto.append(f"**Planeta {i}**: {planeta['tipo']} ({planeta['categoria']})")
-            
+
             embed.add_field(
                 name="🪐 Tipo de Planetas",
                 value="\n".join(tipos_texto),
                 inline=False
             )
-    
+
     # Agregar información de sondeo
     sondeo = sistema.get('sondeo', {})
     if sondeo.get('sondeo_exitoso'):
@@ -188,7 +188,7 @@ def crear_embed_sistema(sistema):
             value=sondeo.get('mensaje', 'Sondeo no exitoso'),
             inline=True
         )
-    
+
     # Agregar información de leviatanes
     leviatanes = sistema.get('leviatanes', {})
     if leviatanes.get('tiene_leviatanes'):
@@ -203,7 +203,7 @@ def crear_embed_sistema(sistema):
             value="No se detectaron leviatanes en el sistema",
             inline=False
         )
-    
+
     # Agregar información de especies (muy raro)
     especies = sistema.get('especies', {})
     if especies.get('tiene_especies'):
@@ -212,7 +212,7 @@ def crear_embed_sistema(sistema):
             value=f"**Tipo:** {especies.get('tipo_especie')}\n**Nivel Tecnológico:** {especies.get('nivel_tecnologico')}",
             inline=False
         )
-        
+
         # Rasgos positivos
         rasgos_positivos = especies.get('rasgos_positivos', [])
         if rasgos_positivos:
@@ -221,7 +221,7 @@ def crear_embed_sistema(sistema):
                 value="\n".join([f"• {rasgo}" for rasgo in rasgos_positivos]),
                 inline=True
             )
-        
+
         # Rasgos negativos
         rasgos_negativos = especies.get('rasgos_negativos', [])
         if rasgos_negativos:
@@ -230,13 +230,13 @@ def crear_embed_sistema(sistema):
                 value="\n".join([f"• {rasgo}" for rasgo in rasgos_negativos]),
                 inline=True
             )
-    
+
     # Añadir footer
     embed.set_footer(
         text="Generado para servidor de roleplay espacial",
         icon_url="https://cdn.discordapp.com/embed/avatars/0.png"
     )
-    
+
     return embed
 
 # Configurar comandos slash
@@ -254,13 +254,13 @@ async def generar_sistema_slash(interaction: discord.Interaction):
             generator = SolarSystemGenerator()
             sistema = generator.generar_sistema_completo()
         embed = crear_embed_sistema(sistema)
-        
+
         await interaction.response.send_message(embed=embed)
-        
+
         # Log del sistema generado
         guild_name = interaction.guild.name if interaction.guild else "DM"
         logging.info(f"Sistema generado para {interaction.user.name} en {guild_name}: {sistema['tipo_sistema']}")
-        
+
     except Exception as e:
         logging.error(f"Error al generar sistema: {e}")
         await interaction.response.send_message(
@@ -276,37 +276,43 @@ async def ayuda_sistema_slash(interaction: discord.Interaction):
         color=0x4CAF50,
         description="Información sobre la generación de sistemas solares"
     )
-    
+
     embed.add_field(
         name="🌟 Tipos de Sistema",
         value="• **Unario** (50%): Un solo sol\n• **Binario** (25%): Dos soles\n• **Trinario** (25%): Tres soles",
         inline=False
     )
-    
+
     embed.add_field(
         name="⭐ Tipos de Estrellas",
         value="• **Más Comunes**: Estrella Clase M, Tipo K, G, F\n• **Menos Comunes**: Tipo A, Tipo T\n• **Raras**: Gigante Roja, Pulsar, Agujero Negro\n• **Muy Raras**: Magnetar, Estrella Extraña, Tipo O",
         inline=False
     )
-    
+
     embed.add_field(
         name="🏠 Habitabilidad",
         value="• **Habitable**: Sistemas con estrellas Tipo K, G, F o A\n• **Inhabitable**: Sistemas con Gigante Roja, Pulsar, Agujero Negro, Estrella Extraña, Magnetar o Tipo O",
         inline=False
     )
-    
+
     embed.add_field(
         name="🪐 Cuerpos Celestes",
         value="• **Planetas**: 1-16 por sistema\n• **Lunas**: 1-27 por sistema\n• **Asteroides**: 0-3 cinturones\n• *No se generan en sistemas con Agujero Negro o Estrella Extraña*",
         inline=False
     )
-    
+
     embed.add_field(
         name="📝 Comandos Disponibles",
-        value="• `/generar_sistema` o `!generar` - Genera un sistema completo con eventos y recursos\n• `/ayuda_sistema` o `!ayuda` - Muestra esta ayuda",
+        value="• `/generar_sistema [nombre]` - Genera un sistema completo\n• `/ficha_sistema <nombre>` - Muestra ficha detallada\n• `/stats_exploracion` - Estadísticas del servidor\n• `/ayuda_sistema` - Muestra esta ayuda",
         inline=False
     )
-    
+
+    embed.add_field(
+        name="🗃️ Base de Datos",
+        value="Los sistemas con nombre se guardan automáticamente y pueden consultarse más tarde. Se lleva registro de quién exploró cada sistema y cuándo.",
+        inline=False
+    )
+
     await interaction.response.send_message(embed=embed)
 
 # Comandos tradicionales con !
@@ -317,13 +323,13 @@ async def generar_comando(ctx):
         # Generar el sistema solar
         sistema = ctx.bot.generator.generar_sistema_completo()
         embed = crear_embed_sistema(sistema)
-        
+
         await ctx.send(embed=embed)
-        
+
         # Log del sistema generado
         guild_name = ctx.guild.name if ctx.guild else "DM"
         logging.info(f"Sistema generado para {ctx.author.name} en {guild_name}: {sistema['tipo_sistema']}")
-        
+
     except Exception as e:
         logging.error(f"Error al generar sistema: {e}")
         await ctx.send("❌ Ocurrió un error al generar el sistema solar. Por favor, inténtalo de nuevo.")
@@ -338,37 +344,43 @@ async def ayuda_comando(ctx):
         color=0x4CAF50,
         description="Información sobre la generación de sistemas solares"
     )
-    
+
     embed.add_field(
         name="🌟 Tipos de Sistema",
         value="• **Unario** (50%): Un solo sol\n• **Binario** (25%): Dos soles\n• **Trinario** (25%): Tres soles",
         inline=False
     )
-    
+
     embed.add_field(
         name="⭐ Tipos de Estrellas",
         value="• **Más Comunes**: Estrella Clase M, Tipo K, G, F\n• **Menos Comunes**: Tipo A, Tipo T\n• **Raras**: Gigante Roja, Pulsar, Agujero Negro\n• **Muy Raras**: Magnetar, Estrella Extraña, Tipo O",
         inline=False
     )
-    
+
     embed.add_field(
         name="🏠 Habitabilidad",
         value="• **Habitable**: Sistemas con estrellas Tipo K, G, F o A\n• **Inhabitable**: Sistemas con Gigante Roja, Pulsar, Agujero Negro, Estrella Extraña, Magnetar o Tipo O",
         inline=False
     )
-    
+
     embed.add_field(
         name="🪐 Cuerpos Celestes",
         value="• **Planetas**: 1-16 por sistema\n• **Lunas**: 1-27 por sistema\n• **Asteroides**: 0-3 cinturones\n• *No se generan en sistemas con Agujero Negro o Estrella Extraña*",
         inline=False
     )
-    
+
     embed.add_field(
         name="📝 Comandos Disponibles",
-        value="• `/generar_sistema` o `!generar` - Genera un sistema completo con eventos y recursos\n• `/ayuda_sistema` o `!ayuda` - Muestra esta ayuda",
+        value="• `/generar_sistema [nombre]` - Genera un sistema completo\n• `/ficha_sistema <nombre>` - Muestra ficha detallada\n• `/stats_exploracion` - Estadísticas del servidor\n• `/ayuda_sistema` - Muestra esta ayuda",
         inline=False
     )
-    
+
+    embed.add_field(
+        name="🗃️ Base de Datos",
+        value="Los sistemas con nombre se guardan automáticamente y pueden consultarse más tarde. Se lleva registro de quién exploró cada sistema y cuándo.",
+        inline=False
+    )
+
     await ctx.send(embed=embed)
 
 # This function is no longer needed - commands are registered in setup_hook
