@@ -1,0 +1,274 @@
+{
+  "systems": {
+    "pollamasiva07": {
+      "original_name": "Pollamasiva07",
+      "explorer_id": 650375893327413289,
+      "explorer_name": "morgan_10000",
+      "timestamp": "2025-07-04T20:01:48.987840",
+      "system_data": {
+        "tipo_sistema": "Binario",
+        "estrellas": [
+          "Tipo T",
+          "Tipo T"
+        ],
+        "habitabilidad": "Inhabitable",
+        "generar_cuerpos": true,
+        "cuerpos_por_estrella": {
+          "Tipo T": {
+            "planetas": 7,
+            "lunas": 3
+          }
+        },
+        "asteroides": 1,
+        "total_planetas": 7,
+        "total_lunas": 3,
+        "tipos_planetas_inhabitables": [
+          "Mundo congelado",
+          "Mundo toxico",
+          "Mundo toxico",
+          "Mundo Volcanico",
+          "Mundo congelado"
+        ],
+        "lunas_planeta_gaseoso": [],
+        "depositos": {
+          "tiene_depositos": true,
+          "recurso": "Gases Exóticos",
+          "mensaje": "Recursos estratégicos presentes en el sistema"
+        },
+        "evento_especial": {
+          "tiene_evento": false,
+          "tipo_evento": null
+        },
+        "planetas_habitables": 0,
+        "tipos_planetas": [],
+        "sondeo": {
+          "sondeo_exitoso": false,
+          "megaestructura": null,
+          "mensaje": "Sondeo no exitoso"
+        },
+        "leviatanes": {
+          "tiene_leviatanes": false,
+          "leviatan": null
+        },
+        "especies": {
+          "tiene_especies": false,
+          "tipo_especie": null,
+          "nivel_tecnologico": null,
+          "rasgos_positivos": [],
+          "rasgos_negativos": []
+        }
+      }
+    },
+    "crisol": {
+      "original_name": "Crisol",
+      "explorer_id": 1338133587836538923,
+      "explorer_name": "colwerkiing",
+      "timestamp": "2025-07-04T20:00:45.163338",
+      "system_data": {
+        "tipo_sistema": "Binario",
+        "estrellas": [
+          "Tipo K",
+          "Estrella Clase M"
+        ],
+        "habitabilidad": "Habitable",
+        "generar_cuerpos": true,
+        "cuerpos_por_estrella": {
+          "Tipo K": {
+            "planetas": 3,
+            "lunas": 5
+          },
+          "Estrella Clase M": {
+            "planetas": 9,
+            "lunas": 8
+          }
+        },
+        "asteroides": 0,
+        "total_planetas": 12,
+        "total_lunas": 13,
+        "depositos": {
+          "tiene_depositos": false,
+          "recurso": null,
+          "mensaje": "No hay ningún depósito de recursos estratégicos en el sistema"
+        },
+        "evento_especial": {
+          "tiene_evento": false,
+          "tipo_evento": null
+        },
+        "planetas_habitables": 2,
+        "tipos_planetas": [
+          {
+            "categoria": "Helados",
+            "tipo": "Bosques de Duna"
+          },
+          {
+            "categoria": "Secos",
+            "tipo": "árido"
+          }
+        ],
+        "sondeo": {
+          "sondeo_exitoso": false,
+          "megaestructura": null,
+          "mensaje": "Sondeo no exitoso"
+        },
+        "leviatanes": {
+          "tiene_leviatanes": false,
+          "leviatan": null
+        },
+        "especies": {
+          "tiene_especies": false,
+          "tipo_especie": null,
+          "nivel_tecnologico": null,
+          "rasgos_positivos": [],
+          "rasgos_negativos": []
+        }
+      }
+    },
+    "pene rico 02": {
+      "original_name": "Pene rico 02",
+      "explorer_id": 650375893327413289,
+      "explorer_name": "morgan_10000",
+      "timestamp": "2025-07-04T20:05:38.868902",
+      "system_data": {
+        "tipo_sistema": "Trinario",
+        "estrellas": [
+          "Estrella Clase M",
+          "Tipo T",
+          "Tipo T"
+        ],
+        "habitabilidad": "Inhabitable",
+        "generar_cuerpos": true,
+        "cuerpos_por_estrella": {
+          "Estrella Clase M": {
+            "planetas": 1,
+            "lunas": 9
+          },
+          "Tipo T": {
+            "planetas": 4,
+            "lunas": 3
+          }
+        },
+        "asteroides": 2,
+        "total_planetas": 5,
+        "total_lunas": 12,
+        "tipos_planetas_inhabitables": [
+          "Planeta Gaseoso",
+          "Planeta Gaseoso",
+          "Mundo Fragmentado",
+          "Planeta Gaseoso",
+          "Mundo yermo"
+        ],
+        "lunas_planeta_gaseoso": [
+          "Moon 1a",
+          "Moon 2a",
+          "Moon 2b",
+          "Moon 4a",
+          "Moon 4b",
+          "Moon 4c"
+        ],
+        "depositos": {
+          "tiene_depositos": false,
+          "recurso": null,
+          "mensaje": "No hay ningún depósito de recursos estratégicos en el sistema"
+        },
+        "evento_especial": {
+          "tiene_evento": true,
+          "tipo_evento": "Anomalía"
+        },
+        "planetas_habitables": 0,
+        "tipos_planetas": [],
+        "sondeo": {
+          "sondeo_exitoso": false,
+          "megaestructura": null,
+          "mensaje": "Sondeo no exitoso"
+        },
+        "leviatanes": {
+          "tiene_leviatanes": false,
+          "leviatan": null
+        },
+        "especies": {
+          "tiene_especies": false,
+          "tipo_especie": null,
+          "nivel_tecnologico": null,
+          "rasgos_positivos": [],
+          "rasgos_negativos": []
+        }
+      }
+    },
+    "me encanta la verga": {
+      "original_name": "Me encanta la verga",
+      "explorer_id": 650375893327413289,
+      "explorer_name": "morgan_10000",
+      "timestamp": "2025-07-04T20:08:18.883125",
+      "system_data": {
+        "tipo_sistema": "Unario",
+        "estrellas": [
+          "Estrella de Neutrones"
+        ],
+        "habitabilidad": "Inhabitable",
+        "generar_cuerpos": true,
+        "cuerpos_por_estrella": {
+          "Estrella de Neutrones": {
+            "planetas": 4,
+            "lunas": 20
+          }
+        },
+        "asteroides": 2,
+        "total_planetas": 4,
+        "total_lunas": 20,
+        "tipos_planetas_inhabitables": [
+          "Mundo toxico",
+          "Mundo congelado",
+          "Planeta Gaseoso",
+          "Mundo Volcanico"
+        ],
+        "lunas_planeta_gaseoso": [
+          "Moon 3a"
+        ],
+        "depositos": {
+          "tiene_depositos": false,
+          "recurso": null,
+          "mensaje": "No hay ningún depósito de recursos estratégicos en el sistema"
+        },
+        "evento_especial": {
+          "tiene_evento": false,
+          "tipo_evento": null
+        },
+        "planetas_habitables": 0,
+        "tipos_planetas": [],
+        "sondeo": {
+          "sondeo_exitoso": false,
+          "megaestructura": null,
+          "mensaje": "Sondeo no exitoso"
+        },
+        "leviatanes": {
+          "tiene_leviatanes": false,
+          "leviatan": null
+        },
+        "especies": {
+          "tiene_especies": false,
+          "tipo_especie": null,
+          "nivel_tecnologico": null,
+          "rasgos_positivos": [],
+          "rasgos_negativos": []
+        }
+      }
+    }
+  },
+  "stats": {
+    "total_systems": 5,
+    "top_explorers": {
+      "1227446003636895785": {
+        "name": "adamelestratega.",
+        "systems_explored": 1
+      },
+      "1338133587836538923": {
+        "name": "colwerkiing",
+        "systems_explored": 1
+      },
+      "650375893327413289": {
+        "name": "morgan_10000",
+        "systems_explored": 3
+      }
+    }
+  }
+}

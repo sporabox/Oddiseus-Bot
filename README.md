@@ -1,109 +1,177 @@
 
-# Discord Solar System Generator Bot
+# 🌌 Bot Generador de Sistemas Solares
 
-Bot generador de sistemas solares para servidores de roleplay de naciones espaciales. Genera sistemas completos con estrellas, planetas, recursos, eventos especiales, leviatanes, especies y más.
+Bot de Discord para generar sistemas solares aleatorios para roleplay de naciones espaciales.
 
-## Características
+## 📋 Características
 
-- **Generación de Sistemas Solares**: Sistemas unarios, binarios y trinarios con diferentes tipos de estrellas
-- **Base de Datos**: Registro automático de sistemas explorados con nombre, explorador y fecha
-- **Estadísticas**: Contador de sistemas explorados por servidor y ranking de exploradores
-- **Fichas de Sistema**: Visualización detallada de sistemas guardados
-- **Eventos Especiales**: Yacimientos arqueológicos y anomalías
-- **Recursos Estratégicos**: Diversos materiales raros y estratégicos
-- **Leviatanes**: Criaturas espaciales con restricciones según el tipo de sistema
-- **Especies**: Generación de especies inteligentes con rasgos únicos
-- **Megaestructuras**: Detectables mediante sondeo exitoso
+- **Generación de sistemas completos** con múltiples tipos de estrellas
+- **Base de datos integrada** para guardar y consultar sistemas
+- **Sistema de nomenclatura detallado** con nombres específicos para cuerpos celestes
+- **Múltiples tipos de comandos** (slash y tradicionales)
+- **Estadísticas de exploración** y ranking de usuarios
+- **Eventos especiales** y recursos estratégicos
+- **Leviatanes y especies inteligentes** raras
+- **Megaestructuras** detectables mediante sondeo
 
-## Archivos del Proyecto
+## 🎮 Comandos del Bot
 
-- `main.py` - Archivo principal para ejecutar el bot
-- `bot.py` - Lógica del bot de Discord y comandos
-- `solar_system_generator.py` - Generador de sistemas solares
-- `config.py` - Configuración de probabilidades y constantes
-- `database.py` - Manejo de base de datos SQLite para sistemas explorados
-- `railway_requirements.txt` - Dependencias para Railway
-- `Procfile` - Comando de inicio para Railway
-- `railway.json` - Configuración de Railway
-
-## Comandos del Bot
-
-### Comandos Slash
+### Comandos Slash (/)
 - `/generar_sistema [nombre]` - Genera un sistema solar aleatorio (opcional: con nombre para guardar)
-- `/ficha_sistema <nombre>` - Muestra la ficha detallada de un sistema guardado
+- `/ficha_sistema <nombre>` - Muestra la ficha básica de un sistema guardado
+- `/generar_ficha <nombre>` - Genera ficha detallada con nombres específicos (GMT-6)
 - `/stats_exploracion` - Muestra estadísticas del servidor y ranking de exploradores
 - `/ayuda_sistema` - Muestra información de ayuda completa
 
-### Comandos Tradicionales
-- `!generar` (o `!sistema`, `!solar`) - Genera un sistema solar aleatorio
+### Comandos Tradicionales (!)
+- `!generar [nombre]` (o `!sistema`, `!solar`) - Genera un sistema solar aleatorio
+- `!ficha <nombre>` - Muestra la ficha básica de un sistema guardado
 - `!ayuda` (o `!info`) - Muestra información de ayuda
 
-## Tipos de Estrellas
+## ⭐ Tipos de Estrellas
 
-### Comunes
-- **Estrella Clase M**: Enana roja, la más común
-- **Tipo K, G, F**: Estrellas habitables
-- **Tipo A**: Estrella habitable pero menos común
+### Comunes (Habitables)
+- **Estrella Clase M**: Enana roja, la más común en la galaxia
+- **Tipo K**: Enana naranja, ideal para la vida
+- **Tipo G**: Como nuestro Sol, estable y habitable
+- **Tipo F**: Estrella blanco-amarilla, habitable pero más caliente
+- **Tipo A**: Estrella blanca y caliente, habitable pero menos duradera
 
-### Raras
-- **Tipo T**: Enana marrón
-- **Gigante Roja**: Estrella en expansión
-- **Pulsar**: Estrella de neutrones en rotación
+### Comunes (No Habitables)
+- **Tipo T**: Enana marrón fría, sin fusión nuclear
+
+### Raras (Peligrosas)
+- **Gigante Roja**: Estrella en expansión, fase terminal
+- **Pulsar**: Estrella de neutrones en rotación rápida
 - **Estrella de Neutrones**: Remanente estelar ultra-denso
 
-### Muy Raras
-- **Agujero Negro**: Gravedad extrema
-- **Magnetar**: Campo magnético extremo
+### Muy Raras (Extremas)
+- **Agujero Negro**: Gravedad extrema, deforma el espacio-tiempo
+- **Magnetar**: Campo magnético extremo, muy peligroso
 - **Estrella Extraña**: Materia exótica hipotética
-- **Tipo O**: Estrella azul masiva
+- **Tipo O**: Estrella azul masiva, vida muy corta
 
-## Recursos Estratégicos
+## 🌟 Tipos de Sistemas
 
-- **Comunes**: Gases Exóticos, Cristales Raros, Polvo Zro
-- **Poco Comunes**: Motas Volátiles
-- **Raros**: Metal Vivo
-- **Muy Raros**: Nanitos
-- **Únicos**: Materia Oscura (solo en sistemas con Agujero Negro)
+- **Unario** (50%): Un solo sol
+- **Binario** (25%): Dos soles
+- **Trinario** (25%): Tres soles
 
-## Leviatanes
+## 🏠 Habitabilidad
 
-Criaturas espaciales que aparecen según el tipo de sistema:
-- **Universales**: Nubes de Vacío, Amebas espaciales, Tiyankis, etc.
-- **Restringidos**: Algunos solo aparecen en ciertos tipos de sistemas
-- **Prohibidos**: Algunos no pueden aparecer en sistemas peligrosos
+- **Habitable**: Sistemas con estrellas Tipo K, G, F o A
+- **Inhabitable**: Sistemas con estrellas peligrosas o extremas
+- **Sin Cuerpos Celestes**: Agujeros Negros y Estrellas Extrañas
 
-## Base de Datos
+## 🪐 Cuerpos Celestes
 
-El bot mantiene un registro automático de:
-- Sistemas explorados con nombre
-- Usuario que exploró cada sistema
-- Fecha y hora de exploración
-- Estadísticas por servidor
-- Ranking de exploradores más activos
+### Generación
+- **Planetas**: 1-16 por sistema
+- **Lunas**: 1-27 por sistema  
+- **Asteroides**: 0-3 cinturones
+- *No se generan en sistemas con Agujero Negro o Estrella Extraña*
 
-## Variables de Entorno Requeridas
+### Nomenclatura en Fichas Detalladas
+- **Estrellas**: `Nombre del Sistema` + `(Tipo de Estrella)`
+  - Ejemplo: `Porin (Tipo G)`
+- **Planetas**: `Nombre del Sistema` + `Número Romano` + `(Tipo de Planeta)`
+  - Ejemplo: `Porin I (Planeta Gaseoso)`, `Porin II (Gaia)`
+- **Lunas**: `Nombre del Planeta` + `letra minúscula`
+  - Ejemplo: `Porin Ia`, `Porin Ib`, `Porin IIIa`
 
-- `DISCORD_BOT_TOKEN` - Token del bot de Discord
+## 💎 Recursos Estratégicos
 
-## Despliegue en Replit
+### Comunes
+- **Gases Exóticos**: Útiles para tecnología avanzada
+- **Cristales Raros**: Componentes para equipamiento
+- **Polvo Zro**: Material psiónico
 
-1. Configura la variable de entorno `DISCORD_BOT_TOKEN` en los Secrets de Replit
-2. El bot se ejecutará automáticamente con el botón Run
-3. La base de datos SQLite se crea automáticamente al iniciar
+### Poco Comunes
+- **Motas Volátiles**: Energía especializada
 
-## Características Especiales
+### Raros
+- **Metal Vivo**: Tecnología auto-reparadora
 
-- **Habitabilidad**: Determinada por tipos de estrellas presentes
-- **Cuerpos Celestes**: Planetas, lunas y asteroides distribuidos por estrella
-- **Eventos Especiales**: 15% de probabilidad de yacimientos o anomalías
-- **Sondeo**: 5% de probabilidad de detectar megaestructuras
-- **Especies**: 10% de probabilidad en sistemas habitables
-- **Advertencias**: El bot advierte si un nombre de sistema ya existe pero permite duplicados
+### Muy Raros
+- **Nanitos**: Tecnología de vanguardia
 
-## Probabilidades
+### Únicos
+- **Materia Oscura**: Solo en sistemas con Agujero Negro
 
-- **Sistemas**: 50% Unario, 25% Binario, 25% Trinario
-- **Recursos**: 15% de probabilidad de depósitos estratégicos
-- **Leviatanes**: 20% de probabilidad de aparición
-- **Especies**: 10% solo en sistemas habitables
-- **Eventos**: 15% de probabilidad de eventos especiales
+## ⚡ Eventos Especiales (30% probabilidad)
+
+- **Tormenta Psiónica**: Fenómeno mental en el sistema
+- **Lluvia Meteórica**: Bombardeo constante de meteoritos
+
+## 🏗️ Megaestructuras (3% probabilidad mediante sondeo)
+
+### Comunes
+- Estación Espacial Abandonada
+- Plataforma de Investigación
+- Puesto de Observación
+
+### Raras  
+- Mundo Anillo
+- Esfera de Dyson Parcial
+- Portal Dimensional
+
+### Muy Raras
+- Esfera de Dyson Completa
+- Matrioshka Brain
+- Computadora Cuántica Galáctica
+
+## 🐉 Leviatanes (7% probabilidad)
+
+### Generales
+- Guardián Estelar
+- Bestia del Vacío
+- Devorador de Mundos
+
+### Específicos por Tipo de Estrella
+- **Estelaritas**: Solo en sistemas normales
+- **Entidades Cristalinas**: Solo en Pulsares, Neutrones, Magnetar
+
+## 👽 Especies Inteligentes (2% probabilidad en sistemas habitables)
+
+### Tipos
+- Humanoides, Reptilianos, Insectoides, Acuáticos, Gaseosos, Máquinas, Energía Pura
+
+### Niveles Tecnológicos
+- Pre-espacial, Espacial Primitivo, Espacial Avanzado, Tecnología Arcana
+
+### Rasgos
+- **3 Rasgos Positivos** y **2 Rasgos Negativos** por especie
+- Restricciones y exclusiones entre ciertos rasgos
+
+## 🗃️ Base de Datos
+
+- **Almacenamiento automático** de sistemas con nombre
+- **Tracking de exploradores** y fecha de descubrimiento
+- **Estadísticas del servidor** y ranking de usuarios
+- **Consulta posterior** de sistemas guardados
+- **Fichas detalladas** con nomenclatura específica
+
+## 🕐 Zona Horaria
+
+Las fichas detalladas (`/generar_ficha`) muestran la fecha y hora en **GMT-6**.
+
+## 🚀 Uso Recomendado
+
+1. **Exploración básica**: Usa `/generar_sistema` o `!generar` para exploración rápida
+2. **Sistemas importantes**: Añade un nombre para guardar en la base de datos
+3. **Consulta rápida**: Usa `/ficha_sistema` para ver información básica
+4. **Ficha oficial**: Usa `/generar_ficha` para crear documentación detallada con nombres específicos
+5. **Estadísticas**: Revisa `/stats_exploracion` para ver el progreso del servidor
+
+## 📊 Probabilidades del Sistema
+
+- **Habitabilidad**: ~45% de sistemas habitables
+- **Recursos**: 25% probabilidad de depósitos estratégicos
+- **Eventos**: 30% probabilidad de eventos especiales
+- **Megaestructuras**: 3% probabilidad mediante sondeo exitoso
+- **Leviatanes**: 7% probabilidad de aparición
+- **Especies**: 2% probabilidad en sistemas habitables
+
+---
+
+*Bot desarrollado para servidores de roleplay de naciones espaciales*
