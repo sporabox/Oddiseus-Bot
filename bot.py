@@ -168,6 +168,28 @@ def crear_embed_sistema(sistema):
                 value="\n".join(tipos_texto),
                 inline=False
             )
+    else:
+        # Mostrar tipos de planetas inhabitables
+        tipos_planetas = sistema.get('tipos_planetas_inhabitables', [])
+        if tipos_planetas:
+            tipos_texto = []
+            for i, planeta in enumerate(tipos_planetas, 1):
+                if planeta == "Planeta Gaseoso":
+                    # Agregar lunas para planetas gaseosos
+                    lunas = sistema.get('lunas_planeta_gaseoso', [])
+                    if lunas:
+                        luna_texto = "\n".join([f"    {luna}" for luna in lunas])
+                        tipos_texto.append(f"**Planeta {i}**: {planeta}\n{luna_texto}")
+                    else:
+                        tipos_texto.append(f"**Planeta {i}**: {planeta}")
+                else:
+                    tipos_texto.append(f"**Planeta {i}**: {planeta}")
+
+            embed.add_field(
+                name="🪐 Planetas del Sistema",
+                value="\n".join(tipos_texto),
+                inline=False
+            )
 
     # Agregar información de sondeo
     sondeo = sistema.get('sondeo', {})
