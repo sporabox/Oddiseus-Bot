@@ -25,10 +25,11 @@ def main():
     bot = SolarSystemBot()
 
     # Add traditional commands
-    from bot import generar_comando, ayuda_comando, ficha_comando
+    from bot import generar_comando, ayuda_comando, ficha_comando, generar_ficha_comando
     bot.add_command(generar_comando)
     bot.add_command(ayuda_comando)
     bot.add_command(ficha_comando)
+    bot.add_command(generar_ficha_comando)
 
     try:
         bot.run(token)

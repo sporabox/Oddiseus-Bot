@@ -44,13 +44,24 @@ class SystemDatabase:
         """Añade un nuevo sistema a la base de datos"""
         timestamp = datetime.now().isoformat()
         
-        # Añadir sistema
-        self.data['systems'][system_name.lower()] = {
+        # Crear clave única para evitar colisiones
+        base_key = system_name.lower()
+        unique_key = base_key
+        counter = 1
+        
+        # Si ya existe, agregar un sufijo numérico
+        while unique_key in self.data['systems']:
+            unique_key = f"{base_key}_{counter}"
+            counter += 1
+        
+        # Añadir sistema con clave única
+        self.data['systems'][unique_key] = {
             'original_name': system_name,
             'explorer_id': user_id,
             'explorer_name': user_name,
             'timestamp': timestamp,
-            'system_data': system_data
+            'system_data': system_data,
+            'unique_key': unique_key
         }
         
         # Actualizar estadísticas
@@ -69,8 +80,22 @@ class SystemDatabase:
         self.save_data()
     
     def get_system(self, system_name):
-        """Obtiene información de un sistema específico"""
-        return self.data['systems'].get(system_name.lower())
+        """Obtiene información de un sistema específico - devuelve el más reciente si hay duplicados"""
+        base_key = system_name.lower()
+        
+        # Buscar sistemas que coincidan con el nombre base
+        matching_systems = []
+        for key, system_data in self.data['systems'].items():
+            if key == base_key or key.startswith(f"{base_key}_"):
+                if system_data['original_name'].lower() == base_key:
+                    matching_systems.append((key, system_data))
+        
+        if not matching_systems:
+            return None
+        
+        # Devolver el sistema más reciente
+        matching_systems.sort(key=lambda x: x[1]['timestamp'], reverse=True)
+        return matching_systems[0][1]
     
     def get_top_explorers(self, limit=10):
         """Obtiene los mejores exploradores"""

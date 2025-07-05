@@ -537,6 +537,38 @@ async def ficha_comando(ctx, *, nombre: str):
         logging.error(f"Error al consultar ficha de sistema: {e}")
         await ctx.send("❌ Ocurrió un error al consultar la ficha del sistema.")
 
+@commands.command(name='generar_ficha', aliases=['ficha_detallada'])
+async def generar_ficha_comando(ctx, *, nombre: str):
+    """Comando tradicional para generar ficha detallada con nombres específicos"""
+    try:
+        # Buscar el sistema en la base de datos
+        sistema_info = ctx.bot.database.get_system(nombre)
+        
+        if not sistema_info:
+            await ctx.send(f"❌ No se encontró el sistema '{nombre}' en la base de datos. Primero genera un sistema con ese nombre usando `!generar {nombre}` o `/generar_sistema {nombre}`")
+            return
+        
+        # Crear embed detallado
+        sistema_data = sistema_info['system_data']
+        embed = crear_embed_ficha_detallada(sistema_data, sistema_info['original_name'])
+        
+        # Añadir información del explorador
+        embed.add_field(
+            name="🧭 Información de Exploración",
+            value=f"**Explorador Original:** {sistema_info['explorer_name']}\n**Fecha de Descubrimiento:** {sistema_info['timestamp'][:10]}\n**Hora:** {sistema_info['timestamp'][11:19]}",
+            inline=False
+        )
+        
+        await ctx.send(embed=embed)
+        
+        # Log
+        guild_name = ctx.guild.name if ctx.guild else "DM"
+        logging.info(f"Ficha detallada de sistema '{nombre}' generada por {ctx.author.name} en {guild_name}")
+        
+    except Exception as e:
+        logging.error(f"Error al generar ficha detallada: {e}")
+        await ctx.send("❌ Ocurrió un error al generar la ficha detallada del sistema.")
+
 @commands.command(name='ayuda', aliases=['info'])
 async def ayuda_comando(ctx):
     """Comando tradicional de ayuda que explica los tipos de sistemas y estrellas"""
@@ -572,7 +604,7 @@ async def ayuda_comando(ctx):
 
     embed.add_field(
         name="📝 Comandos Disponibles",
-        value="• `!generar [nombre]` / `/generar_sistema [nombre]` - Genera un sistema completo\n• `!ficha <nombre>` / `/ficha_sistema <nombre>` - Muestra ficha detallada\n• `/generar_ficha <nombre>` - Genera ficha con nombres detallados\n• `/stats_exploracion` - Estadísticas del servidor\n• `!ayuda` / `/ayuda_sistema` - Muestra esta ayuda",
+        value="• `!generar [nombre]` / `/generar_sistema [nombre]` - Genera un sistema completo\n• `!ficha <nombre>` / `/ficha_sistema <nombre>` - Muestra ficha detallada\n• `!generar_ficha <nombre>` / `/generar_ficha <nombre>` - Genera ficha con nombres detallados\n• `/stats_exploracion` - Estadísticas del servidor\n• `!ayuda` / `/ayuda_sistema` - Muestra esta ayuda",
         inline=False
     )
 
@@ -713,7 +745,7 @@ def crear_embed_ficha_detallada(sistema, nombre_sistema):
     return embed
 
 def generar_nombres_planetas_lunas(nombre_sistema, sistema):
-    """Genera nombres detallados para planetas y lunas usando números romanos"""
+    """Genera nombres detallados para planetas y lunas usando números romanos organizados por estrella"""
     def numero_a_romano(num):
         valores = [
             (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),
@@ -732,56 +764,76 @@ def generar_nombres_planetas_lunas(nombre_sistema, sistema):
         return "No hay planetas en este sistema"
 
     resultado = ""
+    estrellas = sistema.get('estrellas', [])
+    cuerpos_por_estrella = sistema.get('cuerpos_por_estrella', {})
     
-    # Distribuir lunas entre planetas de manera realista
-    total_lunas = sistema.get('total_lunas', 0)
-    lunas_por_planeta = []
-    
-    if total_lunas > 0:
-        # Distribuir lunas aleatoriamente entre planetas
-        import random
-        lunas_restantes = total_lunas
-        for i in range(total_planetas):
-            if i == total_planetas - 1:  # Último planeta obtiene lunas restantes
-                lunas_por_planeta.append(lunas_restantes)
-            else:
-                max_lunas = min(lunas_restantes, random.randint(0, 4))
-                lunas_por_planeta.append(max_lunas)
-                lunas_restantes -= max_lunas
+    # Obtener tipos de planetas
+    tipos_planetas = []
+    if sistema['habitabilidad'] == "Habitable":
+        tipos_habitables = sistema.get('tipos_planetas', [])
+        for tipo_info in tipos_habitables:
+            tipos_planetas.append(tipo_info['tipo'])
     else:
-        lunas_por_planeta = [0] * total_planetas
-
-    # Generar información de planetas
-    for i in range(min(total_planetas, 10)):  # Máximo 10 planetas mostrados
-        romano = numero_a_romano(i + 1)
-        nombre_planeta = f"**{nombre_sistema} {romano}**"
+        tipos_planetas = sistema.get('tipos_planetas_inhabitables', [])
+    
+    planeta_global_counter = 0
+    
+    # Iterar por cada estrella
+    for i, estrella in enumerate(estrellas):
+        cuerpos_estrella = cuerpos_por_estrella.get(estrella, {'planetas': 0, 'lunas': 0})
+        planetas_estrella = cuerpos_estrella['planetas']
+        lunas_estrella = cuerpos_estrella['lunas']
         
-        # Determinar tipo de planeta
-        tipo_planeta = "Planeta"
-        if sistema['habitabilidad'] == "Habitable":
-            tipos_planetas = sistema.get('tipos_planetas', [])
-            if i < len(tipos_planetas):
-                tipo_planeta = tipos_planetas[i]['tipo']
+        if planetas_estrella == 0:
+            continue
+            
+        # Nombre de la estrella
+        if len(estrellas) == 1:
+            resultado += f"⭐ **Sol {nombre_sistema}** ({estrella})\n\n"
         else:
-            tipos_inhabitables = sistema.get('tipos_planetas_inhabitables', [])
-            if i < len(tipos_inhabitables):
-                tipo_planeta = tipos_inhabitables[i]
-
-        resultado += f"🪐 {nombre_planeta} ({tipo_planeta})\n"
+            letra_estrella = chr(65 + i)  # A, B, C
+            resultado += f"⭐ **Sol {nombre_sistema} {letra_estrella}** ({estrella})\n\n"
         
-        # Añadir lunas si las tiene
-        num_lunas = lunas_por_planeta[i] if i < len(lunas_por_planeta) else 0
-        if num_lunas > 0:
-            for j in range(num_lunas):
-                letra_luna = chr(97 + j)  # a, b, c, d...
-                resultado += f"   🌙 {nombre_sistema} {romano}{letra_luna}\n"
+        # Distribuir lunas entre los planetas de esta estrella
+        lunas_por_planeta = []
+        if lunas_estrella > 0:
+            import random
+            lunas_restantes = lunas_estrella
+            for j in range(planetas_estrella):
+                if j == planetas_estrella - 1:  # Último planeta obtiene lunas restantes
+                    lunas_por_planeta.append(lunas_restantes)
+                else:
+                    max_lunas = min(lunas_restantes, random.randint(0, 3))
+                    lunas_por_planeta.append(max_lunas)
+                    lunas_restantes -= max_lunas
         else:
-            resultado += f"   No tiene lunas\n"
+            lunas_por_planeta = [0] * planetas_estrella
         
+        # Generar planetas para esta estrella
+        for j in range(planetas_estrella):
+            romano = numero_a_romano(planeta_global_counter + 1)
+            nombre_planeta = f"**{nombre_sistema} {romano}**"
+            
+            # Determinar tipo de planeta
+            tipo_planeta = "Planeta"
+            if planeta_global_counter < len(tipos_planetas):
+                tipo_planeta = tipos_planetas[planeta_global_counter]
+            
+            resultado += f"🪐 {nombre_planeta} ({tipo_planeta})\n"
+            
+            # Añadir lunas si las tiene
+            num_lunas = lunas_por_planeta[j] if j < len(lunas_por_planeta) else 0
+            if num_lunas > 0:
+                for k in range(num_lunas):
+                    letra_luna = chr(97 + k)  # a, b, c, d...
+                    resultado += f"   🌙 {nombre_sistema} {romano}{letra_luna}\n"
+            
+            planeta_global_counter += 1
+            
         resultado += "\n"
-
-    if total_planetas > 10:
-        resultado += f"... y {total_planetas - 10} planetas adicionales\n"
+    
+    if total_planetas > planeta_global_counter:
+        resultado += f"... y {total_planetas - planeta_global_counter} planetas adicionales\n"
 
     return resultado
 
